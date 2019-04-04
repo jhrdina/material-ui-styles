@@ -17,9 +17,9 @@ var _warning = _interopRequireDefault(require("warning"));
 
 var _utils = require("@material-ui/utils");
 
-var _ThemeContext = _interopRequireDefault(require("../useTheme/ThemeContext"));
+var _ThemeContext = _interopRequireDefault(require("./ThemeContext"));
 
-var _useTheme = _interopRequireDefault(require("../useTheme"));
+var _useTheme = _interopRequireDefault(require("./useTheme"));
 
 // To support composition of theme.
 function mergeOuterLocalTheme(outerTheme, localTheme) {

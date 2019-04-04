@@ -3,8 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
 import { exactProp } from '@material-ui/utils';
-import ThemeContext from '../useTheme/ThemeContext';
-import useTheme from '../useTheme'; // To support composition of theme.
+import ThemeContext from './ThemeContext';
+import useTheme from './useTheme'; // To support composition of theme.
 
 function mergeOuterLocalTheme(outerTheme, localTheme) {
   if (typeof localTheme === 'function') {
