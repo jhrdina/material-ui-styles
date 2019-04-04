@@ -17,14 +17,15 @@ var _warning = _interopRequireDefault(require("warning"));
 
 var _utils = require("@material-ui/utils");
 
-var _ThemeContext = _interopRequireDefault(require("./ThemeContext"));
+var _ThemeContext = _interopRequireDefault(require("../useTheme/ThemeContext"));
+
+var _useTheme = _interopRequireDefault(require("../useTheme"));
 
 // To support composition of theme.
 function mergeOuterLocalTheme(outerTheme, localTheme) {
   if (typeof localTheme === 'function') {
-    process.env.NODE_ENV !== "production" ? (0, _warning["default"])(outerTheme, ['Material-UI: you are providing a theme function property ' + 'to the ThemeProvider component:', '<ThemeProvider theme={outerTheme => outerTheme} />', 'However, no outer theme is present.', 'Make sure a theme is already injected higher in the React tree ' + 'or provide a theme object.'].join('\n')) : void 0;
     var mergedTheme = localTheme(outerTheme);
-    process.env.NODE_ENV !== "production" ? (0, _warning["default"])(mergedTheme, 'Material-UI: return an object from your theme function, i.e. theme={() => ({})}!') : void 0;
+    process.env.NODE_ENV !== "production" ? (0, _warning["default"])(mergedTheme, ['Material-UI: you should return an object from your theme function, i.e.', '<ThemeProvider theme={() => ({})} />'].join('\n')) : void 0;
     return mergedTheme;
   }
 
@@ -40,25 +41,26 @@ function mergeOuterLocalTheme(outerTheme, localTheme) {
 function ThemeProvider(props) {
   var children = props.children,
       localTheme = props.theme;
-  return _react["default"].createElement(_ThemeContext["default"].Consumer, null, function (outerTheme) {
-    var theme = _react["default"].useMemo(function () {
-      return outerTheme === null ? localTheme : mergeOuterLocalTheme(outerTheme, localTheme);
-    }, [localTheme, outerTheme]);
+  var outerTheme = (0, _useTheme["default"])();
+  process.env.NODE_ENV !== "production" ? (0, _warning["default"])(outerTheme !== null || typeof localTheme !== 'function', ['Material-UI: you are providing a theme function property ' + 'to the ThemeProvider component:', '<ThemeProvider theme={outerTheme => outerTheme} />', '', 'However, no outer theme is present.', 'Make sure a theme is already injected higher in the React tree ' + 'or provide a theme object.'].join('\n')) : void 0;
 
-    return _react["default"].createElement(_ThemeContext["default"].Provider, {
-      value: theme
-    }, children);
-  });
+  var theme = _react["default"].useMemo(function () {
+    return outerTheme === null ? localTheme : mergeOuterLocalTheme(outerTheme, localTheme);
+  }, [localTheme, outerTheme]);
+
+  return _react["default"].createElement(_ThemeContext["default"].Provider, {
+    value: theme
+  }, children);
 }
 
 process.env.NODE_ENV !== "production" ? ThemeProvider.propTypes = {
   /**
-   * You can wrap a node.
+   * Your component tree
    */
   children: _propTypes["default"].node.isRequired,
 
   /**
-   * A theme object.
+   * A theme object. You can provide a function to extend the outer theme.
    */
   theme: _propTypes["default"].oneOfType([_propTypes["default"].object, _propTypes["default"].func]).isRequired
 } : void 0;
